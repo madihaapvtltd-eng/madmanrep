@@ -6,7 +6,6 @@ import {
   Search, 
   Edit2, 
   Trash2, 
-  QrCode,
   Car,
   AlertTriangle,
   Calendar,
