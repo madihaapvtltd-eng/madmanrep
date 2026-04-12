@@ -193,7 +193,7 @@ export function Assets() {
     }));
   };
 
-  const isVehicle = formData.category === 'vehicle' || formData.isVehicle;
+  const isVehicle = formData.category === 'vehicle';
 
   // Helper to check if a renewal date is expired or expiring soon
   const getRenewalStatus = (nextDate?: string) => {
