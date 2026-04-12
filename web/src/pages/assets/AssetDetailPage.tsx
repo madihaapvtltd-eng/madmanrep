@@ -77,7 +77,17 @@ export function AssetDetailPage() {
       if (editForm.riskLevel !== undefined && editForm.riskLevel !== null && editForm.riskLevel !== '') {
         updateData.riskLevel = editForm.riskLevel;
       }
-      
+
+      // Include vehicle renewal dates for vehicles
+      if (editForm.type === 'vehicle') {
+        updateData.roadWorthinessLast = editForm.roadWorthinessLast || '';
+        updateData.roadWorthinessNext = editForm.roadWorthinessNext || '';
+        updateData.insuranceLast = editForm.insuranceLast || '';
+        updateData.insuranceNext = editForm.insuranceNext || '';
+        updateData.annualFeeLast = editForm.annualFeeLast || '';
+        updateData.annualFeeNext = editForm.annualFeeNext || '';
+      }
+
       await updateDoc(doc(db, 'assets', id), updateData);
       toast.success('Asset updated successfully');
       setEditing(false);
@@ -174,6 +184,86 @@ export function AssetDetailPage() {
               </div>
             </div>
           </div>
+
+          {/* Vehicle Renewal Dates - Only for vehicles */}
+          {asset.type === 'vehicle' && (
+            <div className="card">
+              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                  <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 6h-4a1 1 0 00-1 1v6.05A2.5 2.5 0 0111.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z" />
+                </svg>
+                Vehicle Renewal Dates
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Road Worthiness */}
+                <div className="bg-green-50 p-3 rounded-lg border border-green-200">
+                  <h4 className="font-medium text-sm mb-2 text-green-800 flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                    R. Worthiness
+                  </h4>
+                  <div className="space-y-1 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Last:</span>
+                      <span className="font-medium">{asset.roadWorthinessLast ? format(new Date(asset.roadWorthinessLast), 'dd-MM-yyyy') : 'N/A'}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Next:</span>
+                      <span className={`font-medium ${asset.roadWorthinessNext && new Date(asset.roadWorthinessNext) < new Date() ? 'text-red-600' : 'text-green-700'}`}>
+                        {asset.roadWorthinessNext ? format(new Date(asset.roadWorthinessNext), 'dd-MM-yyyy') : 'N/A'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Insurance */}
+                <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
+                  <h4 className="font-medium text-sm mb-2 text-blue-800 flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                    Insurance
+                  </h4>
+                  <div className="space-y-1 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Last:</span>
+                      <span className="font-medium">{asset.insuranceLast ? format(new Date(asset.insuranceLast), 'dd-MM-yyyy') : 'N/A'}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Next:</span>
+                      <span className={`font-medium ${asset.insuranceNext && new Date(asset.insuranceNext) < new Date() ? 'text-red-600' : 'text-blue-700'}`}>
+                        {asset.insuranceNext ? format(new Date(asset.insuranceNext), 'dd-MM-yyyy') : 'N/A'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Annual Fee */}
+                <div className="bg-purple-50 p-3 rounded-lg border border-purple-200">
+                  <h4 className="font-medium text-sm mb-2 text-purple-800 flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                    Annual Fee
+                  </h4>
+                  <div className="space-y-1 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Last:</span>
+                      <span className="font-medium">{asset.annualFeeLast ? format(new Date(asset.annualFeeLast), 'dd-MM-yyyy') : 'N/A'}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Next:</span>
+                      <span className={`font-medium ${asset.annualFeeNext && new Date(asset.annualFeeNext) < new Date() ? 'text-red-600' : 'text-purple-700'}`}>
+                        {asset.annualFeeNext ? format(new Date(asset.annualFeeNext), 'dd-MM-yyyy') : 'N/A'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Work Order History */}
           <div className="card">
@@ -370,6 +460,95 @@ export function AssetDetailPage() {
                     <option value="compressor">Compressor</option>
                     <option value="other">Other</option>
                   </select>
+                </div>
+              )}
+
+              {/* Vehicle Renewal Dates - only show for vehicles */}
+              {editForm.type === 'vehicle' && (
+                <div className="md:col-span-2 bg-blue-50 p-4 rounded-lg border border-blue-200">
+                  <h4 className="font-medium text-sm mb-3 text-blue-900 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                      <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 6h-4a1 1 0 00-1 1v6.05A2.5 2.5 0 0111.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z" />
+                    </svg>
+                    Vehicle Renewal Dates
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Road Worthiness */}
+                    <div className="bg-white p-3 rounded border">
+                      <h5 className="font-medium text-xs mb-2 text-green-700">R. Worthiness</h5>
+                      <div className="space-y-2">
+                        <div>
+                          <label className="text-xs text-gray-500">Last Renewal</label>
+                          <input
+                            type="date"
+                            className="input w-full text-sm"
+                            value={editForm.roadWorthinessLast || ''}
+                            onChange={(e) => setEditForm({...editForm, roadWorthinessLast: e.target.value})}
+                          />
+                        </div>
+                        <div>
+                          <label className="text-xs text-gray-500">Next Renewal *</label>
+                          <input
+                            type="date"
+                            className="input w-full text-sm"
+                            value={editForm.roadWorthinessNext || ''}
+                            onChange={(e) => setEditForm({...editForm, roadWorthinessNext: e.target.value})}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Insurance */}
+                    <div className="bg-white p-3 rounded border">
+                      <h5 className="font-medium text-xs mb-2 text-blue-700">Insurance</h5>
+                      <div className="space-y-2">
+                        <div>
+                          <label className="text-xs text-gray-500">Last Renewal</label>
+                          <input
+                            type="date"
+                            className="input w-full text-sm"
+                            value={editForm.insuranceLast || ''}
+                            onChange={(e) => setEditForm({...editForm, insuranceLast: e.target.value})}
+                          />
+                        </div>
+                        <div>
+                          <label className="text-xs text-gray-500">Next Renewal *</label>
+                          <input
+                            type="date"
+                            className="input w-full text-sm"
+                            value={editForm.insuranceNext || ''}
+                            onChange={(e) => setEditForm({...editForm, insuranceNext: e.target.value})}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Annual Fee */}
+                    <div className="bg-white p-3 rounded border">
+                      <h5 className="font-medium text-xs mb-2 text-purple-700">Annual Fee</h5>
+                      <div className="space-y-2">
+                        <div>
+                          <label className="text-xs text-gray-500">Last Renewal</label>
+                          <input
+                            type="date"
+                            className="input w-full text-sm"
+                            value={editForm.annualFeeLast || ''}
+                            onChange={(e) => setEditForm({...editForm, annualFeeLast: e.target.value})}
+                          />
+                        </div>
+                        <div>
+                          <label className="text-xs text-gray-500">Next Renewal *</label>
+                          <input
+                            type="date"
+                            className="input w-full text-sm"
+                            value={editForm.annualFeeNext || ''}
+                            onChange={(e) => setEditForm({...editForm, annualFeeNext: e.target.value})}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
               <div>
