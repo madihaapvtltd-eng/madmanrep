@@ -194,6 +194,11 @@ export function Assets() {
   };
 
   const isVehicle = formData.category === 'vehicle';
+  
+  // DEBUG: Log values to trace the issue
+  console.log('DEBUG - formData.category:', formData.category);
+  console.log('DEBUG - isVehicle:', isVehicle);
+  console.log('DEBUG - formData.isVehicle:', formData.isVehicle);
 
   // Helper to check if a renewal date is expired or expiring soon
   const getRenewalStatus = (nextDate?: string) => {
